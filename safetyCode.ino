@@ -36,14 +36,16 @@ int tempConversion()
     float temp = 0;
     float voltage = 0;
     
-    //TODO: get 50 voltage samples and take average
+    //taking 50 voltage samples from thermistor and finding their sum
     for (int i = 0; i < 50; i++)
     {
-        //voltage += readRegister()
+        int sensorValue = analogRead(A0);
+        //converting the analog reading to a voltage
+        voltage += sensorValue * (5.0/1023.0);
     }
 
-    //take average of voltage sample:
-    //voltage = voltage/50.0;
+    //take average of voltage sample
+    voltage = voltage/50.0;
 
     //TODO: convert averaged voltage into temperature
     //temp = (insert formula)
@@ -58,8 +60,8 @@ waits a predetermined amount of time
 */
 void sleep(int x)
 {
-    //TODO: turn off MOSFET
-    //set mosfet pin low
+    //turning off MOSFET
+    digitalWrite(20,LOW);
     
     switch(x)
     {
@@ -77,8 +79,8 @@ void sleep(int x)
         break; 
     }
 
-    //TODO: turn on MOSFET
-    //set mosfet pin high
+    //turning on MOSFET
+    digitalWrite(20,HIGH);
 }
 
 //------------------------------------------------------------------
@@ -90,9 +92,11 @@ void setup()
 {
     info.identity = rand();
 
-    //SAM check shared clock, begin SPI
-    //Seria
-    //SPI.begin();
+    //begins SPI clock
+    SPI.begin();
+
+    //setting for ss pin
+    pinMode(28, OUTPUT);
 
     //setting voltage divider as input, and mosfet as output:
     pinMode(4,INPUT);
@@ -127,3 +131,9 @@ void readLora()
     
 }
 */
+
+// miso pin 30
+// mosi pin  29
+// clk spi pin 1
+// ss spi pin 28
+// reset digital 9
