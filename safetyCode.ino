@@ -10,12 +10,14 @@ nano and LoRa module within embedded road light to receiver on road signs
 ----------------------------------------------------------------------
 */
 
+//Included Libraries
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-//#include <SPI.h>
+#include <SPI.h>
 
-//TODO Arduino register definitions
+//--------------------------------------------------------------------
+//Project Methods
 
 //Object Structure with Identifier and temp data holder
 struct information
@@ -25,71 +27,26 @@ struct information
 
 };
 
-
-/*
-Tick function to be called in wait
-*/
-void tick(int ticks)
-{
-    volatile int cntDwn;
-    for (cntDwn = 0; cntDwn < ticks; cntDwn++)
-    {}
-}
-
-
-/*
-Wait function with input of seconds
-*/
-void wait(int sec)
-{
-    //TODO
-}
-
-
-/*
-Initialization Method opens access to all necessary devices
-and interfaces necessary
-*/
-void system_init()
-{
-
-    //TODO init inner interfacing for #ArduinoNanoMC
-    //MOSI/D11 pin 29, MISO/D12 = pin 30 , SCK/D13 = pin 1
-    
-    //TODO init pins for Temp Sensor
-    //MOSFET in = INT0/D2 pin 20, input in ADC0/A0 pin 4
-    
-    //TODO init LoRa Module
-    //reset pin on Arduino to lora is pin 27
-
-}
-
 /*
 Temeperature Conversion Method reads in voltage values, takes the average
 of those voltages and converts the resulting voltage into a temperature
 */
 int tempConversion()
 {
-    int temp = 0;
-    int R0 = 100000;    //resistor in series with thermistor is 100k ohm
-    int Rt = 5000;  //NTC thermistor resistance value at 25 degrees C
+    float temp = 0;
+    float voltage = 0;
     
-
-    /*
-    Calculates The Temperature Directly:
-    temp = 1/(1/T0 + 1/B * ln(R/R0));
-
-    Calculates Ouput Voltage:
-    Vo = Vs * (R0 / ( Rt + R0 ));
-    */
-
     //TODO: get 50 voltage samples and take average
     for (int i = 0; i < 50; i++)
     {
-        
+        //voltage += readRegister()
     }
+
+    //take average of voltage sample:
+    //voltage = voltage/50.0;
+
     //TODO: convert averaged voltage into temperature
-    
+    //temp = (insert formula)
     
     return temp;
 }
@@ -102,25 +59,30 @@ waits a predetermined amount of time
 void sleep(int x)
 {
     //TODO: turn off MOSFET
+    //set mosfet pin low
     
     switch(x)
     {
         case 0:
         //power off for 30 mins
-        wait(1800);
+        delay(1800000);
         break;
         case 1:
         //power off for 15 mins
-        wait(900);
+        delay(900000);
         break;
         case 2:
         //power off for 5 mins
-        wait(300);
+        delay(300000);
         break; 
     }
 
     //TODO: turn on MOSFET
+    //set mosfet pin high
 }
+
+//------------------------------------------------------------------
+//Arduino implementation Structure
 
 struct information info;
 
@@ -128,9 +90,13 @@ void setup()
 {
     info.identity = rand();
 
-    //Serial.begin(freq for lora);?
+    //SAM check shared clock, begin SPI
+    //Seria
     //SPI.begin();
-    //pinMode()??
+
+    //setting voltage divider as input, and mosfet as output:
+    pinMode(4,INPUT);
+    pinMode(20,OUTPUT);
 }
 
 void loop() 
@@ -153,8 +119,10 @@ void writeLora()
 
     ss high
 }
+
 void readLora()
 {
+    
 
     
 }
