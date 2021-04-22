@@ -64,24 +64,6 @@ void system_init()
 
 }
 
-
-/*
-Read and Write Functions for the Interfacing
-*/
-void read()
-{
-
-    //TODO
-
-}
-
-
-void write()
-{
-    //TODO
-}
-
-
 /*
 Temeperature Conversion Method reads in voltage values, takes the average
 of those voltages and converts the resulting voltage into a temperature
@@ -145,11 +127,35 @@ struct information info;
 void setup() 
 {
     info.identity = rand();
+
+    //Serial.begin(freq for lora);?
+    //SPI.begin();
+    //pinMode()??
 }
 
 void loop() 
 {
         info.temp = tempConversion();
 
-        //TODO read and write to LoRa
+        //TODO send temp data to LoRa
+
+        //TODO read wait data from LoRa
+
+        //sleep(data from TODO above );
 }
+
+/*
+void writeLora()
+{
+    ss low
+    
+    SPI.transfer(info);
+
+    ss high
+}
+void readLora()
+{
+
+    
+}
+*/
