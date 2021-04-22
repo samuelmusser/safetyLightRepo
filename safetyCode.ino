@@ -15,6 +15,7 @@ nano and LoRa module within embedded road light to receiver on road signs
 #include <stdio.h>
 #include <string.h>
 #include <SPI.h>
+#include <RH_RF95.h>
 
 //--------------------------------------------------------------------
 //Project Methods
@@ -88,6 +89,9 @@ void sleep(int x)
 
 struct information info;
 
+const int READ = 
+const int WRITE = 
+
 void setup() 
 {
     info.identity = rand();
@@ -126,9 +130,11 @@ void writeLora()
 
 void readLora()
 {
-    
+    ss low
 
-    
+
+
+    ss high
 }
 */
 
