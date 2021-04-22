@@ -13,9 +13,17 @@ nano and LoRa module within embedded road light to receiver on road signs
 //Included Libraries
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <SPI.h>
 #include <RH_RF95.h>
+
+//Definitions
+#define RF95_RST 27
+#define RF95_CS  28
+#define RF95_INT 
+#define RF95_FREQ 915.0
+
+//RH_RF95 rf95(RF95_CS)
+
+uint8_t data[RH_]
 
 //--------------------------------------------------------------------
 //Project Methods
