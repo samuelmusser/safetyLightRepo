@@ -13,8 +13,28 @@ nano and LoRa module within embedded road light to receiver on road signs
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+//#include <SPI.h>
 
 //TODO Arduino register definitions
+
+
+/* Possible find ID functions for Arduino site:
+char sID[7];
+
+void setup()
+{
+    Serial.begin(9600);
+    for (int i=0; i<6; i++)
+    {
+        sID[i] = EEPROM.read(i);
+    }
+}
+
+void loop()
+{
+    Serial.printlnsID(sID);
+}
+*/
 
 //Object Structure with Identifier and temp data holder
 struct information
@@ -53,11 +73,13 @@ void system_init()
 {
 
     //TODO init inner interfacing for #ArduinoNanoMC
-
+    //MOSI/D11 pin 29, MISO/D12 = pin 30 , SCK/D13 = pin 1
     
     //TODO init pins for Temp Sensor
+    //MOSFET in = INT0/D2 pin 20, input in ADC0/A0 pin 4
     
     //TODO init LoRa Module
+    //reset pin on Arduino to lora is pin 27
 
 }
 
@@ -86,10 +108,25 @@ of those voltages and converts the resulting voltage into a temperature
 int tempConversion()
 {
     int temp = 0;
+    int R0 = 100000;    //resistor in series with thermistor is 100k ohm
+    int Rt = 5000;  //NTC thermistor resistance value at 25 degrees C
+    
+
+    /*
+    Calculates The Temperature Directly:
+    temp = 1/(1/T0 + 1/B * ln(R/R0));
+
+    Calculates Ouput Voltage:
+    Vo = Vs * (R0 / ( Rt + R0 ));
+    */
 
     //TODO: get 50 voltage samples and take average
-
+    for (int i = 0; i < 50; i++)
+    {
+        
+    }
     //TODO: convert averaged voltage into temperature
+    
     
     return temp;
 }
@@ -106,13 +143,16 @@ void sleep(int x)
     switch(x)
     {
         case 0:
-        //TODO: power off for 30 mins
+        //power off for 30 mins
+        wait(1800);
         break;
         case 1:
-        //TODO: power off for 15 mins
+        //power off for 15 mins
+        wait(900);
         break;
         case 2:
-        //TODO: power off for 5 mins
+        //power off for 5 mins
+        wait(300);
         break; 
     }
 
@@ -122,8 +162,16 @@ void sleep(int x)
 
 int main (int argc, int argv[])
 {
+    struct information info;
 
-    
+    info.identity = rand();
 
+    while(1)
+    {
+        info.temp = tempConversion();
+
+        //TODO read and write to LoRa
+
+    }
     return 0;
 }
