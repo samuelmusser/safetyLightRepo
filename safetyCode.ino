@@ -5,6 +5,7 @@ Authors: Chris Bharucha, Sam Musser
 Due Date: May 9, 2021
 Version: 0.2
 Objective:
+[Device]
 Parse temperature data and network microcontrollers via Arduino
 nano and LoRa module within embedded road light to receiver on road signs
 ----------------------------------------------------------------------
@@ -13,17 +14,8 @@ nano and LoRa module within embedded road light to receiver on road signs
 //Included Libraries
 #include <stdlib.h>
 #include <stdio.h>
-#include <RH_RF95.h>
-
-//Definitions
-#define RF95_RST 27
-#define RF95_CS  28
-#define RF95_INT 
-#define RF95_FREQ 915.0
-
-//RH_RF95 rf95(RF95_CS)
-
-uint8_t data[RH_]
+#include <SPI.h>
+#include <LoRa.h>
 
 //--------------------------------------------------------------------
 //Project Methods
@@ -97,18 +89,16 @@ void sleep(int x)
 
 struct information info;
 
-const int READ = 
-const int WRITE = 
+int counter = 0;
 
 void setup() 
 {
     info.identity = rand();
 
-    //begins SPI clock
-    SPI.begin();
+    Serial.begin(9600);
+    while (!Serial);
 
-    //setting for ss pin
-    pinMode(28, OUTPUT);
+    Serial.println("Safety Light");
 
     //setting voltage divider as input, and mosfet as output:
     pinMode(4,INPUT);
@@ -117,37 +107,18 @@ void setup()
 
 void loop() 
 {
-        info.temp = tempConversion();
+    info.temp = tempConversion();
 
-        //TODO send temp data to LoRa
+    Serial.print("Sending temp/ID: ");
+    Serial.println(counter);
 
-        //TODO read wait data from LoRa
+    // send packet
+    LoRa.beginPacket();
+    LoRa.print("48 degF, ID22 ");
+    LoRa.print(counter);
+    LoRa.endPacket();
 
-        //sleep(data from TODO above );
+    counter++;
+
+    delay(500);
 }
-
-/*
-void writeLora()
-{
-    ss low
-    
-    SPI.transfer(info);
-
-    ss high
-}
-
-void readLora()
-{
-    ss low
-
-
-
-    ss high
-}
-*/
-
-// miso pin 30
-// mosi pin  29
-// clk spi pin 1
-// ss spi pin 28
-// reset digital 9
