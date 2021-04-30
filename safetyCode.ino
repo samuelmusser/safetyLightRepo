@@ -34,25 +34,35 @@ of those voltages and converts the resulting voltage into a temperature
 */
 int tempConversion()
 {
-    float temp = 0;
     float voltage = 0;
+    float kelvin = 0;
+    float fahrenheit = 0;
+    float adcVal = 0;
+
+    const float B = 3984.0; //Beta of thermistor
+    const float adcMax = 1023.0;
+    const float initialTemp = 1.0 / 298.15; //room temperature (Kelvin)
     
     //taking 50 voltage samples from thermistor and finding their sum
     for (int i = 0; i < 50; i++)
     {
-        int sensorValue = analogRead(A0);
-        //converting the analog reading to a voltage
-        voltage += sensorValue * (5.0/1023.0);
+        //reading in from the analog pin AO
+        adcVal += analogRead(A0);
+        delay(50);
     }
 
     //take average of voltage sample
-    voltage = voltage/50.0;
+    adcVal = adcVal/50.0;
 
-    //TODO: convert averaged voltage into temperature
-    //temp = (insert formula)
+    //convert averaged voltage into temperature (Kelvin)
+    kelvin = 1.0/(initialTemp + B*(log(adcMax / adcVal-1.0)));
+
+    //convert from Kelvin to Fahrenheit
+    fahrenheit = ((9.0 * (kelvin - 273.15))/5.0) + 32.0;
     
-    return temp;
+    return fahrenheit;
 }
+
 
 
 /*
@@ -85,11 +95,9 @@ void sleep(int x)
 }
 
 //------------------------------------------------------------------
-//Arduino implementation Structure
+//Arduino implementation Structure and LoRa read/write
 
 struct information info;
-
-int counter = 0;
 
 void setup() 
 {
@@ -98,11 +106,12 @@ void setup()
     Serial.begin(9600);
     while (!Serial);
 
-    Serial.println("Safety Light");
+    Serial.println("LoRa Sender");
+    LoRa.setPins(LORA_DEFAULT_SS_PIN, LORA_DEFAULT_RESET_PIN, 3);
 
-    //setting voltage divider as input, and mosfet as output:
-    pinMode(4,INPUT);
-    pinMode(20,OUTPUT);
+    //setting voltage divider as input, and mosfet control as output:
+    pinMode(14,INPUT);
+    pinMode(2,OUTPUT);
 }
 
 void loop() 
@@ -110,15 +119,27 @@ void loop()
     info.temp = tempConversion();
 
     Serial.print("Sending temp/ID: ");
-    Serial.println(counter);
 
     // send packet
     LoRa.beginPacket();
     LoRa.print("48 degF, ID22 ");
-    LoRa.print(counter);
     LoRa.endPacket();
 
-    counter++;
-
     delay(500);
+}
+
+void listen(int packetSize)
+{
+  String message = "";
+  //where there is a message or not
+  if (packetSize) {
+
+    // read packet
+    while (LoRa.available()) {
+      message += (char)LoRa.read();
+    }
+
+    
+    
+  }
 }
