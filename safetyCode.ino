@@ -98,6 +98,7 @@ void sleep(int x)
 //Arduino implementation Structure and LoRa read/write
 
 struct information info;
+String sendMe;
 
 void setup() 
 {
@@ -106,7 +107,7 @@ void setup()
     Serial.begin(9600);
     while (!Serial);
 
-    Serial.println("LoRa Sender");
+    Serial.println("LoRa Safety Light");
     LoRa.setPins(LORA_DEFAULT_SS_PIN, LORA_DEFAULT_RESET_PIN, 3);
 
     //setting voltage divider as input, and mosfet control as output:
@@ -118,19 +119,26 @@ void loop()
 {
     info.temp = tempConversion();
 
-    Serial.print("Sending temp/ID: ");
+    Serial.print("Sending temp and ID");
+    sendMe = "ReadMe," + String(info.identity) + "," + String(info.temp);
 
     // send packet
     LoRa.beginPacket();
-    LoRa.print("48 degF, ID22 ");
+    LoRa.print(sendMe);
     LoRa.endPacket();
 
-    delay(500);
+    communicate(LoRa.parsePacket());
 }
 
-void listen(int packetSize)
+//listens for LoRa from Safety Lights and saves data for parsing
+void communicate(int packetSize)
 {
   String message = "";
+  String pass;
+  int wtTm;
+  
+  int index;
+  
   //where there is a message or not
   if (packetSize) {
 
@@ -138,8 +146,18 @@ void listen(int packetSize)
     while (LoRa.available()) {
       message += (char)LoRa.read();
     }
-
-    
+  
+    index = message.indexOf(',');
+  
+    pass = message.substring(0, index);
+    wtTm = (message.substring(index + 1)).toInt();
+  
+    //if code and ID matches or is new, it is added to data storage
+    if (pass.equals("PowerSave"))
+    {
+      sleep(wtTm);
+    }
     
   }
+    
 }
