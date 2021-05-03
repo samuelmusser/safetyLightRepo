@@ -3,10 +3,10 @@
 Project: Safety Light (Device/Receiver)
 Authors: Chris Bharucha, Sam Musser
 Due Date: May 9, 2021
-Version: 0.2
+Version: 0.9
 Objective:
 [Device]
-Parse temperature data and network microcontrollers via Arduino
+Sense temperature data and network microcontrollers via Arduino
 nano and LoRa module within embedded road light to receiver on road signs
 ----------------------------------------------------------------------
 */

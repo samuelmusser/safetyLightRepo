@@ -3,11 +3,12 @@
 Project: Safety Light (Device/Receiver)
 Authors: Chris Bharucha, Sam Musser
 Due Date: May 9, 2021
-Version: 0.2
+Version: 0.9
 Objective:
-[Device]
-Parse temperature data and network microcontrollers via Arduino
+[Receiver]
+Collect temperature data and network microcontrollers via Arduino
 nano and LoRa module within embedded road light to receiver on road signs
+to then implement power save options or display message
 ----------------------------------------------------------------------
 */
 
@@ -142,7 +143,7 @@ void talk(int waitNum)
 {
   // send packet with key phrase and power number
     LoRa.beginPacket();
-    LoRa.print("PowerSave," + waitNum);
+    LoRa.print("PowerSave," + String(waitNum));
     LoRa.endPacket();
   
 }
