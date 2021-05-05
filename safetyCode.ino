@@ -39,7 +39,7 @@ int tempConversion()
     float fahrenheit = 0;
     float adcVal = 0;
 
-    const float B = 3984.0; //Beta of thermistor
+    const float B = 1.0/3984.0; //Beta of thermistor
     const float adcMax = 1023.0;
     const float initialTemp = 1.0 / 298.15; //room temperature (Kelvin)
     
