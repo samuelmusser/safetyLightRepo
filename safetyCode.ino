@@ -34,12 +34,13 @@ of those voltages and converts the resulting voltage into a temperature
 */
 int tempConversion()
 {
-    float voltage = 0;
-    float kelvin = 0;
-    float fahrenheit = 0;
-    float adcVal = 0;
+    float voltage = 0.0;
+    float kelvin = 0.0;
+    float fahrenheit = 0.0;
+    float celsius = 0.0;
+    float adcVal = 0.0;
 
-    const float B = 1.0/3984.0; //Beta of thermistor
+    const float B = 1.0 / 3984.0; //Beta of thermistor
     const float adcMax = 1023.0;
     const float initialTemp = 1.0 / 298.15; //room temperature (Kelvin)
     
@@ -50,20 +51,20 @@ int tempConversion()
         adcVal += analogRead(A0);
         delay(50);
     }
-
+    
     //take average of voltage sample
     adcVal = adcVal/50.0;
-
+    
     //convert averaged voltage into temperature (Kelvin)
-    kelvin = 1.0/(initialTemp + B*(log(adcMax / adcVal-1.0)));
-
+    kelvin = 1.0/(initialTemp + B*(log((adcMax / adcVal) - 1.0)));
+    
+    celsius = kelvin - 273.15;
+    
     //convert from Kelvin to Fahrenheit
-    fahrenheit = ((9.0 * (kelvin - 273.15))/5.0) + 32.0;
+    fahrenheit = ((9.0 * celsius)/5.0) + 32.0;
     
     return fahrenheit;
 }
-
-
 
 /*
 Sleep Method takes an input from the output of the Receiver's checkTemp Method and
