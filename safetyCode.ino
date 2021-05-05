@@ -127,6 +127,7 @@ void loop()
     LoRa.beginPacket();
     LoRa.print(sendMe);
     LoRa.endPacket();
+    Serial.println("Message sent with: " + sendMe);
 
     communicate(LoRa.parsePacket());
 }
